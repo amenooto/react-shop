@@ -1,4 +1,7 @@
-import {CartType} from "../../graphql/cart";
+import {CartType, DELETE_TO_CART, UPDATE_TO_CART} from "../../graphql/cart";
+import {useMutation} from "react-query";
+import {getClient, grapqlFetcher, QueryKeys} from "../../queryClient";
+import {ForwardedRef, forwardRef, SyntheticEvent} from "react";
 
 const CartItem = ({
     id,
@@ -6,10 +9,65 @@ const CartItem = ({
     price,
     title,
     amount
-} : CartType) => (
-    <li>
-        {id} {imageUrl} {price} {title} {amount}
-    </li>
-)
+} : CartType, ref: ForwardedRef<HTMLInputElement>) => {
+    const queryClient = getClient();
 
-export default CartItem
+    const { mutate: updateCart } = useMutation(
+        ({ id, amount }: { id: string; amount: number }) => grapqlFetcher(UPDATE_TO_CART, { id, amount }),
+        {
+            onMutate: async ({ id, amount }) => {
+                await queryClient.cancelQueries(QueryKeys.CART)
+                const prevCart = queryClient.getQueryData<{ [key: string]: CartType }>(QueryKeys.CART)
+                if (!prevCart?.[id]) return prevCart
+
+                const newCart = {
+                    ...(prevCart || {}),
+                    [id]: { ...prevCart[id], amount },
+                }
+                queryClient.setQueryData(QueryKeys.CART, newCart)
+                return prevCart
+            },
+            onSuccess: newValue => {
+                const prevCart = queryClient.getQueryData<{ [key: string]: CartType }>(QueryKeys.CART)
+                const newCart = {
+                    ...(prevCart || {}),
+                    [id]: newValue,
+                }
+                queryClient.setQueryData(QueryKeys.CART, newCart)
+            },
+        },
+    )
+
+    const handleUpdateAmount = (e: SyntheticEvent) => {
+        const amount = Number((e.target as HTMLInputElement).value)
+        if (amount < 1) return
+        updateCart({id, amount})
+    }
+
+    const { mutate: deleteCart } = useMutation(({ id }: { id: string }) =>
+            grapqlFetcher(DELETE_TO_CART, { id }),
+        {
+            // 낙관적 업데이트로 수정하기
+            onSuccess: () => {
+                queryClient.invalidateQueries(QueryKeys.CART)
+            }
+        }
+    )
+
+    const handleDeleteItem = () => {
+        deleteCart({id})
+    }
+
+    return (
+        <li className="cart-item">
+            <input className="cart-item__checkbox" type="checkbox" name="select-item" ref={ref} />
+            <img className="cart-item__image" src={imageUrl} alt=""/>
+            <p className="cart-item__title">{title}</p>
+            <p className="cart-item__price">{price}</p>
+            <input type="number" min={1} className="cart-item__amount" value={amount} onChange={handleUpdateAmount}/>
+            <button type="button" className="cart-item__button" onClick={handleDeleteItem}>delete</button>
+        </li>
+    )
+}
+
+export default forwardRef(CartItem)

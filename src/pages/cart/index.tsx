@@ -6,7 +6,7 @@ import {CartType} from "../../graphql/cart";
 
 const Cart = () => {
     const {data} = useQuery(QueryKeys.CART, () => grapqlFetcher(GET_CART), {
-        // 이유는?
+        // 캐싱의 문제
         staleTime: 0,
         cacheTime: 1000,
     })

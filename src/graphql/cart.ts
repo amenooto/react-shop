@@ -10,13 +10,31 @@ export type CartType = {
 
 export const ADD_TO_CART = gql`
     mutation ADD_TO_CART($id: string) {
-        cartType {
+        cartType(id: $id) {
             id
             imageUrl
             price
             title
             amount
         }
+    }
+`
+
+export const UPDATE_TO_CART = gql`
+    mutation UPDATE_TO_CART($id: string, $amount: number) {
+        cartType(id: $id, amount: $amount) {
+            id
+            imageUrl
+            price
+            title
+            amount
+        }
+    }
+`
+
+export const DELETE_TO_CART = gql`
+    mutation DELETE_TO_CART($id: string){
+        id
     }
 `
 

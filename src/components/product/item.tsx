@@ -14,6 +14,8 @@ const ProductItem = ({
     description,
     createdAt
 } : Product) => {
+    /*const [cartAmount, setCartAmount] = useRecoilState(cartItemSelector(id))
+    const addToCart = () => setCartAmount(prev => (prev || 0) + 1)*/
     const {mutate: addToCart} = useMutation((id: string) => grapqlFetcher(ADD_TO_CART, { id }))
     return (
         <li className="product-item">
