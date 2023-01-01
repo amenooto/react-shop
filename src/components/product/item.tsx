@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom'
 import {Product} from "../../graphql/products";
-import {cartItemSelector} from "../../recoils/cart";
-import {useRecoilState} from "recoil";
 import {useMutation} from "react-query";
 import {grapqlFetcher, QueryKeys} from "../../queryClient";
 import {ADD_TO_CART} from "../../graphql/cart";

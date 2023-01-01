@@ -1,11 +1,17 @@
 @import 'products';
 @import 'cart';
+@import 'payment';
 
 body {
   margin: 0;
 }
 #root {
   max-width: 900px;
+}
+
+ul {
+  list-style: none;
+  padding: 0 ;
 }
 
 .gnb {
