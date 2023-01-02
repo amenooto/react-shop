@@ -1,58 +1,67 @@
-import {Resolver} from "./types";
+import {Cart, Resolver} from "./types";
+import {DBField, writeDB} from "../dbController";
 
-const mockProducts = Array.from({ length: 20}).map((_, i) => ({
-    id: i + 1 + '',
-    imageUrl: `https://picsum.photos/id/${i+20}/200/150`,
-    price: 50000,
-    title: `product${i+1}`,
-    description: `productDesc${i+1}`,
-    createAt: new Date(123456789123+(i*1000*60*60*24)).toString()
-}))
-
-let cartData = [{ id: '1', amount: 1}, { id: '2', amount: 2 }]
+const setJson = (data: Cart) => writeDB(DBField.CART, data);
 
 const cartResolver: Resolver = {
     Query: {
-        cart: (parent, args, context, info) => {
-            return cartData
+        cart: (parent, args, { db }, info) => {
+            return db.cart
         },
     },
     Mutation: {
-        addCart: (parent, { id }, context, info) => {
-            const newCartData = {...cartData}
-            const targetProd = mockProducts.find(item => item.id === id)
+        addCart: (parent, { id }, { db }, info) => {
+            if (!id) throw Error('no id')
+            const targetProd = db.products.find(item => item.id === id)
             if (!targetProd) { throw new Error('no product')}
 
-            const newItem = {
-                ...targetProd,
-                amount: (newCartData[id]?.amount || 0) + 1
+            const existCartIndex = db.cart.findIndex(item => item.id === id)
+            if (existCartIndex > -1) {
+                const newCartItem = {
+                    id,
+                    amount: db.cart[existCartIndex].amount + 1
+                }
+                db.cart.splice(existCartIndex, 1, newCartItem)
+                setJson(db.cart)
+                return newCartItem
             }
-            newCartData[id] = newItem
-            cartData = newCartData
+
+            const newItem = {
+                id,
+                amount: 1,
+            }
+            db.cart.push(newItem)
+            setJson(db.cart)
             return newItem
         },
-        updateCart: (parent, { id, amount }, context, info) => {
-            const newData = {...cartData}
-            if(!newData[id]) { throw new Error('not data')}
-            const newItem = {
-                ...newData[id],
-                amount,
+        updateCart: (parent, { id, amount }, { db }, info) => {
+            const existCartIndex = db.cart.findIndex(item => item.id === id)
+            if(existCartIndex < 0) { throw new Error('not data')}
+            const newCartItem = {
+                id,
+                amount
             }
-            newData[id] = newItem
-            cartData = newData
-            return newItem
+            db.cart.splice(existCartIndex,1, newCartItem)
+            setJson(db.cart)
+            return newCartItem
         },
-        deleteCart: (parent, { id }, context, info) => {
-            const newData = { ...cartData }
-            delete newData[id]
-            cartData = newData
+        deleteCart: (parent, { id }, { db }, info) => {
+            const existCartIndex = db.cart.findIndex(item => item.id === id)
+            if(existCartIndex < 0) { throw new Error('not data')}
+            db.cart.splice(existCartIndex, 1)
+            setJson(db.cart)
             return id
         },
-        executePay: (parent, { ids }, context, info) => {
-            const newCartData = cartData.filter(cartItem => !ids.includes(cartItem.id))
-            cartData = newCartData
+        executePay: (parent, { ids }, { db }, info) => {
+            const newCartData = db.cart.filter(cartItem => !ids.includes(cartItem.id))
+            db.cart = newCartData
+            setJson(db.cart)
             return ids
         },
+    },
+    CartItem: {
+        product: (cartItem, args, { db }) => db.products.find((product: any) =>
+            product.id === cartItem.id)
     }
 }
 

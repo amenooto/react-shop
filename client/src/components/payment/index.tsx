@@ -15,8 +15,8 @@ export const Payment = () => {
     const [checkedCartData, setCheckedCartData] = useRecoilState(checkedCartState)
     const [modalShow, setModalShow] = useState(false)
 
-    const { mutate: executePay } = useMutation((payInfos: PaymentInfos) =>
-        grapqlFetcher(EXECUTE_PAY, payInfos),
+    const { mutate: executePay } = useMutation((ids: PaymentInfos) =>
+        grapqlFetcher(EXECUTE_PAY, {ids}),
     )
 
     const showModal = () => {
@@ -24,11 +24,14 @@ export const Payment = () => {
     }
 
     const proceed = () => {
-        const payInfos = checkedCartData.map(({ id}) => id)
-        executePay(payInfos)
-        setCheckedCartData([])
-        alert('success')
-        navigate('/products', {replace: true})
+        const ids = checkedCartData.map(({ id}) => id)
+        executePay(ids, {
+            onSuccess: () => {
+                setCheckedCartData([])
+                alert('success')
+                navigate('/products', {replace: true})
+            }
+        })
     }
 
     const cancel = () => {

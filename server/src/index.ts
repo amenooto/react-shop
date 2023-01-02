@@ -1,14 +1,20 @@
 import express from 'express'
-import { ApolloServer } from 'apollo-server-express'
+import {ApolloServer} from 'apollo-server-express'
 import schema from './schema'
-import resolvers from './resolvers'
-    ;(async () => {
+import resolvers from './resolvers';
+import {DBField, readDb} from "./dbController";
+
+(async () => {
     const server = new ApolloServer({
         typeDefs: schema,
         resolvers,
+        context: {
+            db: {
+                products: readDb(DBField.PRODUCTS),
+                cart: readDb(DBField.CART)
+            }
+        }
     })
-    /* context: {
-    } */
 
     const app = express()
     await server.start()
@@ -21,5 +27,6 @@ import resolvers from './resolvers'
         },
     })
     await app.listen({ port: 8000 })
+
     console.log('server listening on 8000...')
 })()

@@ -1,0 +1,142 @@
+[
+  {
+    "id": "1",
+    "title": "product1",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/20/200/150",
+    "description": "productDesc1"
+  },
+  {
+    "id": "2",
+    "title": "product2",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/21/200/150",
+    "description": "productDesc2"
+  },
+  {
+    "id": "3",
+    "title": "product3",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/22/200/150",
+    "description": "productDesc3"
+  },
+  {
+    "id": "4",
+    "title": "product4",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/23/200/150",
+    "description": "productDesc4"
+  },
+  {
+    "id": "5",
+    "title": "product5",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/24/200/150",
+    "description": "productDesc5"
+  },
+  {
+    "id": "6",
+    "title": "product6",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/25/200/150",
+    "description": "productDesc6"
+  },
+  {
+    "id": "7",
+    "title": "product7",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/26/200/150",
+    "description": "productDesc7"
+  },
+  {
+    "id": "8",
+    "title": "product8",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/27/200/150",
+    "description": "productDesc8"
+  },
+  {
+    "id": "9",
+    "title": "product9",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/28/200/150",
+    "description": "productDesc9"
+  },
+  {
+    "id": "10",
+    "title": "product10",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/29/200/150",
+    "description": "productDesc10"
+  },
+  {
+    "id": "11",
+    "title": "product11",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/30/200/150",
+    "description": "productDesc11"
+  },
+  {
+    "id": "12",
+    "title": "product12",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/31/200/150",
+    "description": "productDesc12"
+  },
+  {
+    "id": "13",
+    "title": "product13",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/32/200/150",
+    "description": "productDesc13"
+  },
+  {
+    "id": "14",
+    "title": "product14",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/33/200/150",
+    "description": "productDesc14"
+  },
+  {
+    "id": "15",
+    "title": "product15",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/34/200/150",
+    "description": "productDesc15"
+  },
+  {
+    "id": "16",
+    "title": "product16",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/35/200/150",
+    "description": "productDesc16"
+  },
+  {
+    "id": "17",
+    "title": "product17",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/36/200/150",
+    "description": "productDesc17"
+  },
+  {
+    "id": "18",
+    "title": "product18",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/37/200/150",
+    "description": "productDesc18"
+  },
+  {
+    "id": "19",
+    "title": "product19",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/38/200/150",
+    "description": "productDesc19"
+  },
+  {
+    "id": "20",
+    "title": "product20",
+    "price": 50000,
+    "imageUrl": "https://picsum.photos/id/39/200/150",
+    "description": "productDesc20"
+  }
+]

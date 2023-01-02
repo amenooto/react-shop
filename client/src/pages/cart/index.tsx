@@ -12,7 +12,7 @@ const Cart = () => {
     })
     console.log(data)
 
-    const cartItems = Object.values(data || {}) as CartType[]
+    const cartItems = (data?.cart || []) as CartType[]
 
     if (!cartItems.length) return <div>empty</div>
     return <CartList items={cartItems} />
