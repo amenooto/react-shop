@@ -1,21 +1,18 @@
-import {useQuery} from "react-query";
-import {grapqlFetcher, QueryKeys} from "../../queryClient";
-import {GET_CART} from "../../graphql/cart";
-import CartList from "../../components/cart";
-import {CartType} from "../../graphql/cart";
+import { useQuery } from 'react-query'
+import CartList from '../../components/cart'
+import { CartType, GET_CART } from '../../graphql/cart'
+import { graphqlFetcher, QueryKeys } from '../../queryClient'
 
 const Cart = () => {
-    const {data} = useQuery(QueryKeys.CART, () => grapqlFetcher(GET_CART), {
-        // 캐싱의 문제
-        staleTime: 0,
-        cacheTime: 1000,
-    })
-    console.log(data)
+  const { data } = useQuery(QueryKeys.CART, () => graphqlFetcher(GET_CART), {
+    staleTime: 0,
+    cacheTime: 1000,
+  })
 
-    const cartItems = (data?.cart || []) as CartType[]
+  const cartItems = (data?.cart || []) as CartType[]
+  if (!cartItems.length) return <div>장바구니가 비었어요</div>
 
-    if (!cartItems.length) return <div>empty</div>
-    return <CartList items={cartItems} />
+  return <CartList items={cartItems} />
 }
 
 export default Cart

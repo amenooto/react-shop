@@ -1,30 +1,30 @@
-import fs from 'fs';
-import { resolve} from "path";
+import fs from 'fs'
+import { resolve } from 'path'
 
 export enum DBField {
-    CART = 'cart',
-    PRODUCTS = 'products'
+  CART = 'cart',
+  PRODUCTS = 'products',
 }
 
 const basePath = resolve()
 
-const filename = {
-    [DBField.CART]: resolve(basePath, 'src/db/cart.json'),
-    [DBField.PRODUCTS]: resolve(basePath, 'src/db/products.json'),
+const filenames = {
+  [DBField.CART]: resolve(basePath, 'src/db/cart.json'),
+  [DBField.PRODUCTS]: resolve(basePath, 'src/db/products.json'),
 }
 
-export const readDb = (target: DBField) => {
-    try {
-        return JSON.parse(fs.readFileSync(filename[target], 'utf-8'))
-    } catch (e) {
-        console.error(e)
-    }
+export const readDB = (target: DBField) => {
+  try {
+    return JSON.parse(fs.readFileSync(filenames[target], 'utf-8'))
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 export const writeDB = (target: DBField, data: any) => {
-    try {
-        fs.writeFileSync(filename[target], JSON.stringify(data, null ,' '))
-    } catch (e) {
-        console.error(e)
-    }
+  try {
+    fs.writeFileSync(filenames[target], JSON.stringify(data, null, '  '))
+  } catch (err) {
+    console.error(err)
+  }
 }

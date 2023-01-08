@@ -1,46 +1,48 @@
-import {useRecoilState, useSetRecoilState} from "recoil";
-import {checkedCartState} from "../../recoils/cart";
-import {WillPay} from "../willPay/willPay";
-import {useNavigate} from "react-router-dom";
-import {useState} from "react";
-import {PaymentModal} from "./modal";
-import {useMutation} from "react-query";
-import {grapqlFetcher} from "../../queryClient";
-import {EXECUTE_PAY} from "../../graphql/payment";
+import { useState } from 'react'
+import { useMutation } from 'react-query'
+import { useNavigate } from 'react-router-dom'
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import { EXECUTE_PAY } from '../../graphql/payment'
+import { graphqlFetcher } from '../../queryClient'
+import { checkedCartState } from '../../recoils/cart'
+import WillPay from '../willPay'
+import PaymentModal from './modal'
 
 type PaymentInfos = string[]
 
-export const Payment = () => {
-    const navigate = useNavigate()
-    const [checkedCartData, setCheckedCartData] = useRecoilState(checkedCartState)
-    const [modalShow, setModalShow] = useState(false)
+const Payment = () => {
+  const navigate = useNavigate()
+  const [checkedCartData, setCheckedCartData] = useRecoilState(checkedCartState)
+  const [modalShown, toggleModal] = useState(false)
+  const { mutate: executePay } = useMutation((ids: PaymentInfos) =>
+    graphqlFetcher(EXECUTE_PAY, { ids }),
+  )
 
-    const { mutate: executePay } = useMutation((ids: PaymentInfos) =>
-        grapqlFetcher(EXECUTE_PAY, {ids}),
-    )
+  const showModal = () => {
+    toggleModal(true)
+  }
 
-    const showModal = () => {
-        setModalShow(true)
-    }
+  const proceed = () => {
+    const ids = checkedCartData.map(({ id }) => id)
+    executePay(ids, {
+      onSuccess: () => {
+        setCheckedCartData([])
+        alert('결제 완료되었습니다.')
+        navigate('/products', { replace: true })
+      },
+    })
+  }
 
-    const proceed = () => {
-        const ids = checkedCartData.map(({ id}) => id)
-        executePay(ids, {
-            onSuccess: () => {
-                setCheckedCartData([])
-                alert('success')
-                navigate('/products', {replace: true})
-            }
-        })
-    }
+  const cancel = () => {
+    toggleModal(false)
+  }
 
-    const cancel = () => {
-        setModalShow(false)
-    }
-    return (
-        <div>
-            <WillPay handleSubmit={showModal} submitTitle="payment" />
-            <PaymentModal show={modalShow} proceed={proceed} cancel={cancel} />
-        </div>
-    )
+  return (
+    <div>
+      <WillPay submitTitle="결제하기" handleSubmit={showModal} />
+      <PaymentModal show={modalShown} proceed={proceed} cancel={cancel} />
+    </div>
+  )
 }
+
+export default Payment
