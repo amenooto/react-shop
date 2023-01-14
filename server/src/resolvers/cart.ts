@@ -61,6 +61,10 @@ const cartResolver: Resolver = {
     },
     executePay: (parent, { ids }, { db }) => {
       const newCartData = db.cart.filter(cartItem => !ids.includes(cartItem.id))
+      if (newCartData.some(item => {
+        const product = db.products.find((product: any) => product.id === item.id)
+        return !product?.createdAt
+      })) throw new Error('sold out item in payment')
       db.cart = newCartData
       setJSON(db.cart)
       return ids
